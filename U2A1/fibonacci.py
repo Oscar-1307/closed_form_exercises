@@ -2,10 +2,10 @@ import numpy as np
 
 
 def fibonacciMatrix(number):
-    fibonacciMatrix = [
+    fibonacciMatrix = np.array([
         [1, 1],
         [1, 0]
-    ]
+    ])
     final_sum = []
     while number:
         if (number & 1):
@@ -15,6 +15,7 @@ def fibonacciMatrix(number):
                 final_sum = np.dot(final_sum, fibonacciMatrix)
         fibonacciMatrix = np.dot(fibonacciMatrix, fibonacciMatrix)
         number = number >> 1
+    print(final_sum)
     return final_sum[0, 1]
 
 
