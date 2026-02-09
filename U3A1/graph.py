@@ -88,26 +88,41 @@ class Graph:
         return self._dfs_util(start_vertex, visited)
 
     def find_connected_components(self):
-        """Find all connected components treating the graph as undirected."""
-        visited = set()
+        """Find all connected components treating the graph as undirected.
+        
+        Returns a tuple of sets, where each set contains nodes in a connected component.
+        Example: If nodes {0,1,2} are connected and {3,4} are connected separately,
+        returns ({0,1,2}, {3,4})
+        """
+        visited = set()  # Track which nodes we've already processed
         components = []
 
+        # Loop through every node in the graph
         for node in range(self.graph.shape[0]):
+            # If node hasn't been visited and exists in the graph
             if node not in visited and self.find_node(node):
-                component = set()
+                component = set()  # Create new component set
+                # Find all nodes connected to this node
                 self._explore_component(node, visited, component)
                 components.append(component)
 
         return tuple(components)
 
     def _explore_component(self, node, visited, component):
-        """Explore all nodes in a connected component (undirected)."""
-        visited.add(node)
-        component.add(node)
+        """Recursively explore all nodes reachable from a starting node.
+        
+        Treats the directed graph as undirected by checking edges in both directions.
+        If A→B exists, we consider A and B connected even though the edge is directional.
+        """
+        visited.add(node)  # Mark current node as visited
+        component.add(node)  # Add node to current component
 
+        # Check all possible neighbors
         for neighbor in range(self.graph.shape[0]):
             if neighbor not in visited:
+                # Check if edge exists in either direction (undirected)
                 if self.graph[node, neighbor] or self.graph[neighbor, node]:
+                    # Recursively explore the neighbor
                     self._explore_component(neighbor, visited, component)
 
 
@@ -116,9 +131,6 @@ if __name__ == "__main__":
 
     for u, v in EDGES:
         g.add_edge(u, v)
-
-    # print("Following is Depth First Traversal (starting from vertex 17)")
-    # print(g.dfs(17))
 
     print("Connected components:")
     components = g.find_connected_components()
