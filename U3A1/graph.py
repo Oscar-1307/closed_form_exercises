@@ -87,15 +87,15 @@ class Graph:
         visited = set()
         return self._dfs_util(start_vertex, visited)
 
-    def find_connected_components(self):
-        """Find all connected components treating the graph as undirected.
-        
+    def find_connected_graphs(self):
+        """Find all connected graphs treating the graph as undirected.
+
         Returns a tuple of sets, where each set contains nodes in a connected component.
         Example: If nodes {0,1,2} are connected and {3,4} are connected separately,
         returns ({0,1,2}, {3,4})
         """
         visited = set()  # Track which nodes we've already processed
-        components = []
+        graphs = []
 
         # Loop through every node in the graph
         for node in range(self.graph.shape[0]):
@@ -104,13 +104,13 @@ class Graph:
                 component = set()  # Create new component set
                 # Find all nodes connected to this node
                 self._explore_component(node, visited, component)
-                components.append(component)
+                graphs.append(component)
 
-        return tuple(components)
+        return tuple(graphs)
 
     def _explore_component(self, node, visited, component):
         """Recursively explore all nodes reachable from a starting node.
-        
+
         Treats the directed graph as undirected by checking edges in both directions.
         If A→B exists, we consider A and B connected even though the edge is directional.
         """
@@ -132,8 +132,8 @@ if __name__ == "__main__":
     for u, v in EDGES:
         g.add_edge(u, v)
 
-    print("Connected components:")
-    components = g.find_connected_components()
-    for i, comp in enumerate(components, 1):
-        print(f"Component {i}: {sorted(comp)}")
-    print(f"Total components: {len(components)}")
+    print("Connected graphs:")
+    graphs = g.find_connected_graphs()
+    for i, comp in enumerate(graphs, 1):
+        print(f"Graph {i}: {sorted(comp)}")
+    print(f"Total graphs: {len(graphs)}")
