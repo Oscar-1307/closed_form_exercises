@@ -87,6 +87,29 @@ class Graph:
         visited = set()
         return self._dfs_util(start_vertex, visited)
 
+    def find_connected_components(self):
+        """Find all connected components treating the graph as undirected."""
+        visited = set()
+        components = []
+
+        for node in range(self.graph.shape[0]):
+            if node not in visited and self.find_node(node):
+                component = set()
+                self._explore_component(node, visited, component)
+                components.append(component)
+
+        return tuple(components)
+
+    def _explore_component(self, node, visited, component):
+        """Explore all nodes in a connected component (undirected)."""
+        visited.add(node)
+        component.add(node)
+
+        for neighbor in range(self.graph.shape[0]):
+            if neighbor not in visited:
+                if self.graph[node, neighbor] or self.graph[neighbor, node]:
+                    self._explore_component(neighbor, visited, component)
+
 
 if __name__ == "__main__":
     g = Graph()
@@ -94,5 +117,11 @@ if __name__ == "__main__":
     for u, v in EDGES:
         g.add_edge(u, v)
 
-    print("Following is Depth First Traversal (starting from vertex 17)")
-    print(g.dfs(17))
+    # print("Following is Depth First Traversal (starting from vertex 17)")
+    # print(g.dfs(17))
+
+    print("Connected components:")
+    components = g.find_connected_components()
+    for i, comp in enumerate(components, 1):
+        print(f"Component {i}: {sorted(comp)}")
+    print(f"Total components: {len(components)}")
