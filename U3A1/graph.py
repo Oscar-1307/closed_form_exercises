@@ -101,21 +101,21 @@ class Graph:
         for node in range(self.graph.shape[0]):
             # If node hasn't been visited and exists in the graph
             if node not in visited and self.find_node(node):
-                component = set()  # Create new component set
+                subgraph = set()  # Create new subgraph set
                 # Find all nodes connected to this node
-                self._explore_component(node, visited, component)
-                graphs.append(component)
+                self._explore_graph(node, visited, subgraph)
+                graphs.append(subgraph)
 
         return tuple(graphs)
 
-    def _explore_component(self, node, visited, component):
+    def _explore_graph(self, node, visited, subgraph):
         """Recursively explore all nodes reachable from a starting node.
 
         Treats the directed graph as undirected by checking edges in both directions.
         If A→B exists, we consider A and B connected even though the edge is directional.
         """
         visited.add(node)  # Mark current node as visited
-        component.add(node)  # Add node to current component
+        subgraph.add(node)  # Add node to current subgraph
 
         # Check all possible neighbors
         for neighbor in range(self.graph.shape[0]):
@@ -123,7 +123,7 @@ class Graph:
                 # Check if edge exists in either direction (undirected)
                 if self.graph[node, neighbor] or self.graph[neighbor, node]:
                     # Recursively explore the neighbor
-                    self._explore_component(neighbor, visited, component)
+                    self._explore_graph(neighbor, visited, subgraph)
 
 
 if __name__ == "__main__":
@@ -134,6 +134,6 @@ if __name__ == "__main__":
 
     print("Connected graphs:")
     graphs = g.find_connected_graphs()
-    for i, comp in enumerate(graphs, 1):
-        print(f"Graph {i}: {sorted(comp)}")
+    for i, subgraph in enumerate(graphs, 1):
+        print(f"Graph {i}: {sorted(subgraph)}")
     print(f"Total graphs: {len(graphs)}")
